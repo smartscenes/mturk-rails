@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= full_title(@title) %></title>
+    <%= stylesheet_link_tag 'application', :media => 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= favicon_link_tag %>
+    <%= csrf_meta_tags %>
+    <meta charset="utf-8">
+    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.4.1/slick.css"/>
+</head>
+<body>
+<%= yield %>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<% entry = JSON.parse(result.data) %>
+<tr>
+  <td><%= result.id %></td>
+  <td><%= result.updated_at %></td>
+  <td><%= link_to result.item, params.merge(:item => result.item) %></td>
+  <td><%= link_to result.condition, params.merge(:condition => result.condition) %></td>
+  <td><%= link_to result.workerId, params.merge(:workerId => result.workerId) %></td>
+  <td>
+
+    <% if entry && entry['entry']['items']%>
+      <% selectedIndex = entry['selectedIndex'] %>
+      <% correctIndex = entry['entry']['correctIndex'].to_i %>
+      <% entry['entry']['items'].each_with_index  do |item, index| %>
+        <% preview_url = get_path(item['url']) %>
+        <% if preview_url %>
+          <% css_class = 'lazy' + ((index == correctIndex)? ((selectedIndex < 0)? ' selected-correct-passed' : ' selected-correct')
+            : ((index == selectedIndex)? ' selected-incorrect' : '')) %>
+          <%= image_tag 'scenePreview.jpg', { 'data-original' => preview_url, 'class' => css_class, 'title'=> item['id'], 'alt'=> item['id'], 'width'=>50 } %>
+        <% end %>
+      <%end%>
+    <% end %>
+  </td>
+  <td>
+    <% if entry %>
+      <% if entry['selectedIndex'] >= 0 %>
+        <% color = entry["correct"]? "green" : "red" %>
+        <span style="color: <%= color %>"><%= entry["correct"] %></span>
+      <% else %>
+        <span style="color: <%= color %>">pass</span>
+      <% end %>
+    <% end %>
+  </td>
+  <td>
+    <% if entry %>
+      <%= link_to entry['entry']['text'], { action: 'view', id: result.id }  rescue entry['entry']['text'] %>
+    <% else %>
+      <%= link_to result.item, { action: 'view', id: result.id }  rescue result.item  %>
+    <% end %>
+  </td>
+  <td>
+    <%= render 'mturk/itemStatusButtons', :result => result %>
+  </td>
+</tr>

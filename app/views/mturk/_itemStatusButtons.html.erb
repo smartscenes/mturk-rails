@@ -1,0 +1,8 @@
+<% if can_manage_tasks %>
+  <%= check_box_tag "check-#{result.id}", 'yes', false, :class => 'item-checkbox' %>
+  <%= link_to '&times;'.html_safe,
+              { controller: '/mturk', action: 'destroy_item', itemId: result.id },
+              data: { confirm: 'Are you sure?' }, method: :post,
+              class: 'btn btn-danger scene-delete' %>
+<% end %>
+<%= result.status %>

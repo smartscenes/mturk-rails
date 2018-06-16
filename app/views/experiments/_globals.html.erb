@@ -1,0 +1,13 @@
+<script type='text/javascript'>
+    window.globals = window.globals || {};
+    $.extend(window.globals, {
+        base_url: "<%= @base_url %>",
+        assets_url: "<%= @base_url %>/assets",
+        images_url: "<%= @base_url %>/assets",
+        entries: <%= raw(@entries.to_json) %>,
+        conf: <%= raw(@conf.to_json) %>,
+        <% if @via_turk %>
+        assignmentId: "<%= @assignment.mtId %>",
+        <% end %>
+    });
+</script>

@@ -1,0 +1,29 @@
+<tr>
+  <% done = !assignment.completed_at.nil? %>
+  <td><%= assignment.created_at %></td>
+  <td>
+    <% if done %>
+      <%= distance_of_time_in_words(assignment.created_at, assignment.completed_at) %>
+    <% end %>
+  </td>
+  <td><%= link_to assignment.taskName, params.merge(:taskName => assignment.taskName) %></td>
+  <td><%= link_to assignment.hitId, params.merge(:hitId => assignment.hitId) %></td>
+  <td><%= link_to assignment.assignmentId, params.merge(:assignmentId => assignment.assignmentId) %></td>
+  <td><%= link_to assignment.workerId, params.merge(:workerId => assignment.workerId) %></td>
+  <td>
+    <%= link_to assignment.data, { controller: 'experiments/' + assignment.taskName, action: 'results', assignmentId: assignment.assignmentId }  rescue assignment.data %>
+  </td>
+  <td>
+    <% if false %>
+    <!-- Doesn't work - Not Authorized -->
+        <%= link_to 'Approve',
+                { controller: '/mturk', action: 'approve_assignment', assignmentId: assignment.assignmentId },
+                  data: { confirm: 'Are you sure?' }, method: :post,
+                  class: 'btn btn-success' %>
+      <%= link_to 'Reject',
+                { controller: '/mturk', action: 'reject_assignment', assignmentId: assignment.assignmentId },
+                  data: { confirm: 'Are you sure?' }, method: :post,
+                  class: 'btn btn-danger' %>
+    <% end %>
+  </td>
+</tr>

@@ -1,0 +1,28 @@
+<tr>
+  <% task = taskInfo %>
+  <td><%= task.name %></td>
+  <td><%= task.title %></td>
+  <td>
+    <% assignment_count = @assignments_count[task.name] %>
+    <%= link_to "assignments(#{assignment_count})", { action: 'assignments', taskName: task.name }  rescue "" %>
+  </td>
+  <td>
+    <% if task.controller == "part_annotation" || task.controller == "segment_annotation" %>
+      <%= link_to "all", { controller: 'experiments/' + task.controller, taskName: task.name, action: 'results' }  rescue "all" %>
+    <% else %>
+      <% completed_count = @completed_items_count[task.id] %>
+      <% ok_count = @ok_items_count[task.id] %>
+      <% if completed_count %>
+          <%= link_to "all(#{completed_count})", { controller: 'experiments/' + task.controller, taskName: task.name, action: 'results' }  rescue "all(#{completed_count})" %>
+      <% end %>
+      <% if ok_count %>
+          <%= link_to "ok(#{ok_count})", { controller: 'experiments/' + task.controller, taskName: task.name, action: 'results', ok: 'true' }  rescue "ok(#{ok_count})" %>
+      <% end %>
+    <% end %>
+  </td>
+  <% if Rails.env.development? %>
+  <td><%= link_to 'test', { action: 'task',
+                            assignmentId: task.name + '_assignment', workerId: 'test_worker', hitId: task.name } %></td>
+  <% end %>
+  <td><%= task.live? %></td>
+</tr>

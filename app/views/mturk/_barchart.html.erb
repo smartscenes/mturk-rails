@@ -1,0 +1,129 @@
+<div id="wrapper">
+</div>
+<style>
+    #xaxis .domain {
+        fill:none;
+        stroke:#000;
+    }
+    #xaxis text, #yaxis text {
+        font-size: 12px;
+    }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" charset="utf-8"></script>
+<script>
+    var namedCounts = <%= raw(@counts.to_json) %>;
+    var categories = namedCounts.map( function(x) { return x.name; });
+    var paddedCategories = [''].concat(categories);
+
+    var maxX = 722;
+    var maxY = categories.length*30;
+
+    var counts = namedCounts.map( function(x) { return x.count; });
+    var maxCount =  Math.max.apply(Math, counts);
+    var minCount = Math.min.apply(Math, counts);
+    var tickInterval = Math.pow(10, maxCount.toString().length-1);
+    var tickCount = Math.ceil(maxCount/tickInterval);
+    var maxDomainX = tickCount*tickInterval;
+    var gridXCount = tickCount*4;
+    var gridX = maxX/gridXCount;
+
+    var colors = namedCounts.map( function(x) { return '#0082ca'; });
+
+    var grid = d3.range(gridXCount+1).map(function(i){
+        return {'x1':0,'y1':0,'x2':0,'y2':maxY};
+    });
+
+    var tickVals = grid.map(function(d,i){
+        if(i>0){ return i*tickInterval; }
+        else if(i===0){ return "0";}
+    });
+
+    var xscale = d3.scale.linear()
+            .domain([0,maxDomainX])
+            .range([0,maxX]);
+
+    var yscale = d3.scale.linear()
+            .domain([0,paddedCategories.length])
+            .range([0,maxY]);
+
+    var colorScale = d3.scale.quantize()
+            .domain([0,paddedCategories.length])
+            .range(colors);
+
+    var canvas = d3.select('#wrapper')
+            .append('svg')
+            .attr({'width':900,'height':maxY + 70});
+
+    var grids = canvas.append('g')
+            .attr('id','grid')
+            .attr('transform','translate(150,10)')
+            .selectAll('line')
+            .data(grid)
+            .enter()
+            .append('line')
+            .attr({'x1':function(d,i){ return i*gridX; },
+                'y1':function(d){ return d.y1; },
+                'x2':function(d,i){ return i*gridX; },
+                'y2':function(d){ return d.y2; }
+            })
+            .style({'stroke':'#adadad','stroke-width':'1px'});
+
+    var	xAxis = d3.svg.axis();
+    xAxis
+            .orient('bottom')
+            .scale(xscale)
+            .tickValues(tickVals);
+
+    var	yAxis = d3.svg.axis();
+    yAxis
+            .orient('left')
+            .scale(yscale)
+            .tickSize(2)
+            .tickFormat(function(d,i){ return paddedCategories[i]; })
+            .tickValues(d3.range(paddedCategories.length));
+
+    var y_xis = canvas.append('g')
+            .attr("transform", "translate(150,0)")
+            .attr('id','yaxis')
+            .call(yAxis);
+
+    var x_xis = canvas.append('g')
+            .attr("transform", "translate(150," + maxY + ")")
+            .attr('id','xaxis')
+            .call(xAxis);
+
+    var chart = canvas.append('g')
+            .attr("transform", "translate(150,0)")
+            .attr('id','bars')
+            .selectAll('rect')
+            .data(counts)
+            .enter()
+            .append('rect')
+            .attr('height',19)
+            .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+            .style('fill',function(d,i){ return colorScale(i); })
+            .on('click', function(d,i) {
+                var link = namedCounts[i].link;
+                if (link) {
+                    window.location = link;
+                }
+             })
+            .attr('width',function(d){ return 0; });
+
+
+    var transit = d3.select("svg").selectAll("rect")
+            .data(counts)
+            .transition()
+            .duration(1000)
+            .attr("width", function(d) {return xscale(d); });
+
+    var transitext = d3.select('#bars')
+            .selectAll('text')
+            .data(counts)
+            .enter()
+            .append('text')
+            .attr({'x':function(d) {return xscale(d)/2; },'y':function(d,i){ return yscale(i)+35; }})
+            .text(function(d){ return d; }).style({'fill':'#fff','font-size':'14px'});
+
+
+</script>

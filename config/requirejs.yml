@@ -1,0 +1,23 @@
+paths:
+  'async': 'async.min'
+  'd3': 'd3-3.5.12.min'
+  'datatables': 'dataTables.bootstrap'
+  'datatables.net': 'jquery.dataTables.min'
+  'datatables.tabletools': 'dataTables.tableTools.min'
+  'jquery': 'jquery-2.1.4.min'
+  'jquery-ui': 'jquery-ui-1.11.4.min'
+  'jquery.hotkeys': 'jquery.hotkeys'
+  'bootstrap': 'bootstrap'
+  'bootbox': 'bootbox.min'
+
+shim:
+  'jquery.debouncedresize': ['jquery']
+  'jquery-ui': ['jquery']
+  'jquery.hotkeys': ['jquery']
+  'bootstrap': ['jquery']
+  'bootbox': ['bootstrap']
+  'datatables': ['datatables.net']
+  'datatables.net': ['jquery']
+  'datatables.tabletools': ['datatables']
+  'loader': ['base']
+  'base': ['jquery']

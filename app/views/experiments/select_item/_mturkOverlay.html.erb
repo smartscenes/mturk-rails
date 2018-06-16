@@ -1,0 +1,95 @@
+<%= render '/experiments/largeimg' %>
+<div id="taskInstructions" class="wholescreenOverlay">
+  <div align="center" class="taskInstructions">
+    <div style='text-align:left'>
+      <p>
+        In this task, we ask you to choose the <%=@conf['itemType']%> that best matches the description.
+      </p>
+      <p>You will be given a total of <%=@entries.length%> descriptions.  For each one,
+        there will be <%=@conf['nChoices']%> images, and you should pick the best match.
+      </p>
+      <p>
+        Each sentence should take about <%=@taskTime['itemTime'] %> to complete.
+        The task should take about <%=@taskTime['taskTime'] %> in total.
+      </p>
+    </div>
+
+    <div align="center">
+      <table id='examples' class="exampleTable">
+        <thead>
+        <th>
+          <div align="center">
+            Example
+          </div>
+        </th>
+        </thead>
+        <tbody>
+        <% examples = @conf['examples'] %>
+        <%if examples %>
+          <%for ei in 0...examples.size %>
+          <% example = examples[ei] %>
+          <% exampleImages = example['images'] %>
+          <tr>
+            <td>
+               <b>Description:</b> <%= example['description'] %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div align="center" class="mturkExample">
+                <% checkNr = example['correct'] %>
+                <%for i in 0...@conf['nChoices']%>
+                  <% exampleImageFile = exampleImages ? exampleImages[i] : 'example-' + ei.to_s + '-' + i.to_s + '.png' %>
+                  <div align="center" class="itemFrame btn btn-default">
+                    <span class="pull-left mediumFont"><%=i+1%></span>
+                    <%= image_tag( @conf['exampleImagesPath'] + exampleImageFile, class: "itemImage")%>
+                    <!-- checkmark or x-mark -->
+                    <span class="pull-right"><font color=<%= (i == checkNr) ? "green" : "red" %>>
+                          <%= (i == checkNr) ? raw("&#x2714;") : raw("&#x2718;") %>
+                          </font></span>
+                  </div>
+                <%end%>
+              </div>
+            </td>
+          </tr>
+          <%end%>
+        <%end%>
+        </tbody>
+      </table>
+    </div>
+    <div  class="center">
+      <input type="button" id="startButton" class="largeButton" value="Start"/>
+    </div>
+  </div>
+</div>
+
+<div id="mturkOverlay" class="wholescreenOverlay" style="display:none">
+  <div class="container">
+    <div id="instructionsTextDiv" class="row center mediumFont">
+      <p>Please select the <%=@conf['itemType']%> that is most similar to the following description</p>
+    </div>
+    <div id="description" class="row center textDescription" style="padding: 0px 20px">
+    </div>
+
+    <div id="items" class="row" align="center" style="width: 100%" >
+      <%for i in 0...@conf['nChoices']%>
+        <div style="display:inline-block" id='<%="itemImageFrame#{i}"%>' class="itemFrame btn btn-default">
+          <span class="pull-left mediumFont"><%=i+1%></span>
+           <%= image_tag '', id: "itemImage#{i}", class: "itemImage" %>
+          <!-- the class: "enlarge" is distracting (at least for now) -->
+        </div>
+      <%end%>
+    </div>
+
+    <div class="row center mediumFont">
+      <p>Click on the <%=@conf['itemType']%> to continue</p>
+    </div>
+
+    <% if @conf['allowPass'] %>
+    <div class="row center mediumFont">
+      <div id="pass" class="btn btn-danger mediumFont">Can't tell (&lt;space&gt;)</div>
+    </div>
+    <% end %>
+
+  </div>
+</div>

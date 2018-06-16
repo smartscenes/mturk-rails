@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <%= stylesheet_link_tag    'application', :media => 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <% if @via_turk and not @preview %>
+    <script type="text/javascript">
+    function signal_turk(response) {
+      var form = document.createElement('form');
+      var id_input = document.createElement('input');
+      var data_input = document.createElement('input');
+      id_input.type = 'hidden';
+      id_input.name = 'assignmentId';
+      id_input.value = "<%= @assignment.mtId %>";
+      data_input.type = 'hidden';
+      data_input.name = 'data';
+      if (response.data) {
+        data_input.value = response.data;
+      } else{
+        data_input.value = "{something: 'dummy'}";
+      }
+      form.appendChild(id_input);
+      form.appendChild(data_input);
+      document.body.appendChild(form);
+
+      form.action = "<%= @turk_submit_to %>/mturk/externalSubmit";
+      form.method = "POST";
+      form.submit();
+    }
+    function submit_coupon() {
+      var coupon_data = document.getElementById('coupon_box').value;
+      
+      $.ajax({
+        type: 'POST',
+        url: "<%= mturk_coupon_url %>",
+        data: {
+          assignmentId: "<%= @assignment.mtId %>",
+          coupon_code: coupon_data
+        },
+        dataType: 'json',
+        timeout: 10000
+      }).error(function() {
+        alert('The coupon code could not be validated');
+      }).success(signal_turk);
+    }
+    </script>
+  <% end %>
+  <%= csrf_meta_tags %>
+  <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+<div class='container'>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h2><%= @task.title %></h2>
+      <h4><%= @task.description %></h4>
+      <% if @via_turk and not @preview then %>
+      <div class="well">
+        <a href="<%= @new_tab_href %>"
+         target="_blank" style="target-new: tab;">
+          Please click here to visit the task page. <br/>
+          On completion you will be given a code, <br/>
+          which can be entered below to receive credit. <br/>
+        </a>
+      </div>
+      <div class="well">
+        <form>
+          <div class="form-group">
+            <label for="coupon_box">Coupon code:</label>
+            <input id='coupon_box' type="text" name="coupon_code" class='form-control' ><br/>
+          </div>
+        </form>
+        <a class='btn btn-default' onclick="submit_coupon();">Submit Coupon</a><br/>
+      </div>
+      <% else %>
+      <p>
+        This HIT is externally hosted.  Instructions will appear
+        once you have accepted the HIT.
+      </p>
+      <% end %>
+
+      <% if @require_webgl %>
+      <%= render partial: 'webgl_check' %>
+      <% end %>
+
+      <% if @sandbox %>
+      <!-- show extra debug information when we're on the sandbox -->
+      <div class="well">
+        VIA TURK:       <%= @via_turk %> <br>
+        <% if @via_turk %>
+          PREVIEW MODE:   <%= @preview %> <br>
+          HIT ID:         <%= @hit.mtId %> <br>
+          <% unless @preview %>
+            ASSIGNMENT ID:  <%= @assignment.mtId %> <br>
+            WORKER ID:      <%= @worker.mtId %> <br>
+            SUBMIT TO:      <%= @turk_submit_to %> <br>
+          <% end %>
+        <% end %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+  <%= debug(params) if Rails.env.development? %>
+</div>
+</body>
+</html>

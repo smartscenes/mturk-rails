@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= full_title(yield(:title)) %></title>
+  <%= stylesheet_link_tag    'application', :media => 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <%= favicon_link_tag %>
+  <!--<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>-->
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+  <%= csrf_meta_tags %>
+  <meta charset="utf-8">
+  <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"/><![endif]-->
+  <script type="text/javascript">
+      // We use the following structure to send data to the client
+      window.globals = {
+          base_url: "<%= @base_url %>"
+      };
+      $(function() {
+          $("img.lazy").lazyload();
+          $(":file").filestyle({
+              input: true
+          })
+      });
+  </script>
+</head>
+<body>
+<%= render 'layouts/header' %>
+<div class='container'>
+  <% flash.each do |key, value| %>
+    <% if key == 'error' %>
+        <% key = 'danger' %>
+    <% end %>
+    <%= content_tag(:div, value, class: "alert alert-#{key}") %>
+  <% end %>
+  <div id="alert" class="alert" style='display:none'>
+    <button type="button" class="close" onclick="hideAlert()">&times;</button>
+    <span id="alertMessage"></span>
+  </div>
+  <%= yield %>
+  <%= render 'layouts/footer' %>
+  <%= debug(params) if Rails.env.development? %>
+</div>
+</body>
+</html>
