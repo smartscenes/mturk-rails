@@ -61,6 +61,9 @@ Framework for mturking using ruby on rails
 * Configuration notes
  * Update `config/config.yml` and `config/secrets.yml` with secret
  * Modify config to have production/development environment
+   * Database - modify `config/database.yml` 
+     * For development, we use [sqlite](https://www.sqlite.org/index.html) for storing annotations.  
+     * For production, we recommend setting up a database that supports concurrency such as [mysql](https://www.mysql.com/).
  * If testing locally set `HOST_BASE_URL: http://localhost:3000`
    For use with AMT, make sure the `HOST_BASE_URL` starts with `https`
  * Initial bundle install need to have `--deployment` to work properly with Phusion Passenger (for apache)
