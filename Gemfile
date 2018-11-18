@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '5.1.4'
+gem 'rails', '5.1.6'
 gem 'rake', '12.3.0'
 gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bcrypt', '~> 3.1.11'
@@ -12,7 +12,7 @@ gem 'activeresource', '~> 5.0.0'
 gem 'puma', '~> 3.7'
 
 # For admin interface
-gem 'activeadmin', github: 'activeadmin'
+gem 'activeadmin', '1.0.0' #github: 'activeadmin'
 # For activeadmin authentication
 gem 'devise'
 
@@ -35,7 +35,7 @@ gem 'bootstrap-filestyle-rails'
 gem 'rturk', '2.12.1'
 
 # For uploading images
-gem 'dragonfly', '~> 1.1.5'
+gem 'dragonfly', '~> 1.2.0'
 # Caching
 #gem 'rack-cache', :require  => 'rack/cache'
 
