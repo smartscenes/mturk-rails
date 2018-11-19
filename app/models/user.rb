@@ -13,8 +13,6 @@
 class User < ApplicationRecord
   attr_accessible :name, :provider, :uid
 
-  has_many :scenes, dependent: :destroy
-
   # non mt users have a null pointer on this association
   has_one :mt_task
 

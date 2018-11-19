@@ -81,6 +81,12 @@ module MTurkRails
     #config.assets.paths << Rails.root.join("vendor/scene-toolkit")
 
     # BaseURI for activeadmin
-    Rails.application.routes.default_url_options[:script_name] = ENV['RAILS_RELATIVE_URL_ROOT']
+    # Rails.application.routes.default_url_options[:script_name] = ENV['RAILS_RELATIVE_URL_ROOT']
+    Rails.application.routes.default_url_options[:script_name] = ActionController::Base.config.relative_url_root || '/'
+
+    # disable asset precompilation
+    #config.assets.precompile = []
+    # see https://stackoverflow.com/questions/43551676/unable-to-convert-unpermitted-parameters-to-hash-ruby-on-rails-app-error
+    config.action_controller.permit_all_parameters = true
   end
 end

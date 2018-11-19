@@ -72,4 +72,6 @@ MTurkRails::Application.configure do
   config.eager_load = true
 
   config.active_record.migration_error = :page_load
+
+  config.public_file_server.enabled = true
 end

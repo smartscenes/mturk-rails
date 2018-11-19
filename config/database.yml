@@ -33,3 +33,6 @@ production:
 #   username: mturkrails
 #   password: mturkrails
 #   host: localhost
+#   strict: false
+#   variables:
+#     sql_mode: ''
